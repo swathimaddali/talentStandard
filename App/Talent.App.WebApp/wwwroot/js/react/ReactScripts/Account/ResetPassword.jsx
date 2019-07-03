@@ -42,8 +42,8 @@ export default class ResetPassword extends React.Component {
             Email: email,
             Token: token
         }
-      // let url = `http://localhost:60998/authentication/authentication/verifyResetPasswordToken?o=${email}&p=${token}`;
-        let url = `https://talentservicesidentity2.azurewebsites.net/authentication/authentication/verifyResetPasswordToken?o=${email}&p=${token}`;
+         let url = `http://localhost:60998/authentication/authentication/verifyResetPasswordToken?o=${email}&p=${token}`;
+       // let url = `https://talentservicesidentity2.azurewebsites.net/authentication/authentication/verifyResetPasswordToken?o=${email}&p=${token}`;
         $.ajax({
             url: url,
             type: 'POST',
@@ -131,8 +131,8 @@ export default class ResetPassword extends React.Component {
         let newPassword = this.state.newPassword;
         let email = this.state.email;
         let token = this.state.token;
-       // let resetUrl = `http://localhost:60998/authentication/authentication/resetpassword?o=${email}&p=${token}`;
-        let resetUrl = `https://talentservicesidentity2.azurewebsites.net/authentication/authentication/resetpassword?o=${email}&p=${token}`;
+        let resetUrl = `http://localhost:60998/authentication/authentication/resetpassword?o=${email}&p=${token}`;
+       // let resetUrl = `https://talentservicesidentity2.azurewebsites.net/authentication/authentication/resetpassword?o=${email}&p=${token}`;
         $.ajax({
             url: resetUrl,
             type: 'POST',

@@ -65,8 +65,8 @@ export default class ManageJob extends React.Component {
         console.log("ManageJob:: inside loadData");
        
         var params = "?showActive="+this.state.filter.showActive + "&showClosed=" + this.state.filter.showClosed + "&showDraft=" + this.state.filter.showDraft + "&showExpired=" + this.state.filter.showExpired + "&showUnexpired=" + this.state.filter.showUnexpired + "&activePage=" + this.state.activePage + "&sortbyDate=" + this.state.sortBy.date;
-       // var link = "http://localhost:51689/listing/listing/getSortedEmployerJobs" + params;
-        var link = "https://talentservicestalent3.azurewebsites.net/listing/listing/getSortedEmployerJobs" + params;
+        var link = "http://localhost:51689/listing/listing/getSortedEmployerJobs" + params;
+       // var link = "https://talentservicestalent3.azurewebsites.net/listing/listing/getSortedEmployerJobs" + params;
 
         console.log("link is" + link);
         var cookies = Cookies.get('talentAuthToken');       
@@ -106,8 +106,8 @@ export default class ManageJob extends React.Component {
         var cookies = Cookies.get('talentAuthToken');
       
         $.ajax({
-           // url: 'http://localhost:51689/listing/listing/closeJob',
-            url: 'https://talentservicestalent3.azurewebsites.net/listing/listing/closeJob',
+           url: 'http://localhost:51689/listing/listing/closeJob',
+            //url: 'https://talentservicestalent3.azurewebsites.net/listing/listing/closeJob',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'

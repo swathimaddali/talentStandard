@@ -41,8 +41,8 @@ export default class Skill extends React.Component {
 
     loadData() {
        // console.log("inside load data");
-       // var link = 'http://localhost:60290/profile/profile/getSkill'
-        var link = 'https://talentservicesprofile3.azurewebsites.net/profile/profile/getSkill'
+        var link = 'http://localhost:60290/profile/profile/getSkill'
+        //var link = 'https://talentservicesprofile3.azurewebsites.net/profile/profile/getSkill'
        
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
@@ -106,8 +106,8 @@ export default class Skill extends React.Component {
        // console.log("data to add" + h);       
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
-           // url: 'http://localhost:60290/profile/profile/addSkill',
-             url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/addSkill',
+            url: 'http://localhost:60290/profile/profile/addSkill',
+             //url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/addSkill',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'
@@ -163,8 +163,8 @@ export default class Skill extends React.Component {
        
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
-           // url: 'http://localhost:60290/profile/profile/updateSkill',
-           url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/updateSkill',
+            url: 'http://localhost:60290/profile/profile/updateSkill',
+          // url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/updateSkill',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'
@@ -214,8 +214,8 @@ export default class Skill extends React.Component {
 
 
         $.ajax({
-           // url: 'http://localhost:60290/profile/profile/deleteSkill',
-            url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/deleteSkill',
+            url: 'http://localhost:60290/profile/profile/deleteSkill',
+          //  url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/deleteSkill',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'

@@ -41,8 +41,8 @@ export default class Language extends React.Component {
 
     loadData() {
         console.log("inside load data");
-       // var link = 'http://localhost:60290/profile/profile/getLanguage'
-        var link = 'https://talentservicesprofile3.azurewebsites.net/profile/profile//getLanguage'
+        var link = 'http://localhost:60290/profile/profile/getLanguage'
+        //var link = 'https://talentservicesprofile3.azurewebsites.net/profile/profile//getLanguage'
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
             url: link,
@@ -116,8 +116,8 @@ export default class Language extends React.Component {
         //console.log("" + JSON.stringify(this.state.profileData));
         var cookies = Cookies.get('talentAuthToken');
        $.ajax({
-          //  url: 'http://localhost:60290/profile/profile/addLanguage',
-          url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/addLanguage',
+            url: 'http://localhost:60290/profile/profile/addLanguage',
+         // url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/addLanguage',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'
@@ -184,8 +184,8 @@ export default class Language extends React.Component {
         
         var cookies = Cookies.get('talentAuthToken');
        $.ajax({
-          // url: 'http://localhost:60290/profile/profile/updateLanguage',
-           url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/updateLanguage',
+           url: 'http://localhost:60290/profile/profile/updateLanguage',
+          // url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/updateLanguage',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'
@@ -236,8 +236,8 @@ export default class Language extends React.Component {
 
         
         $.ajax({
-           //url: 'http://localhost:60290/profile/profile/deleteLanguage',
-            url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/deleteLanguage',
+           url: 'http://localhost:60290/profile/profile/deleteLanguage',
+            //url: 'https://talentservicesprofile3.azurewebsites.net/profile/profile/deleteLanguage',
             headers: {
                 'Authorization': 'Bearer ' + cookies,
                 'Content-Type': 'application/json'

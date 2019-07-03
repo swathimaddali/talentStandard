@@ -40,7 +40,7 @@ namespace Talent.Common.Services
 
             //60f721eb - 546c - 4d15 - 8822 - 895d297e53f0Profile2 C:\Users\phani\source\repos\swathimaddali\talentcompetition\Talent.Services.Profile\images
        
-            var photoUrl= _environment.WebRootPath + _tempFolder + id;
+            var photoUrl= _environment.WebRootPath  + id;
             //   return photoUrl;
 
 
@@ -81,14 +81,15 @@ namespace Talent.Common.Services
                 // unique file name
                 var myUniqueFileName = "";
                 string pathWeb = "";
+                var path = "";
                 pathWeb = _environment.WebRootPath;
 
                 if (file != null && type == FileType.ProfilePhoto && pathWeb != "")
                 {
                     string pathValue = pathWeb + _tempFolder;
-                    myUniqueFileName = $@"{DateTime.Now.Ticks}_" + file.FileName;
+                  //  myUniqueFileName = $@"{DateTime.Now.Ticks}_" + file.FileName;
 
-                    var path = pathValue + myUniqueFileName;
+                    path = pathValue + file.FileName;
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
@@ -96,7 +97,7 @@ namespace Talent.Common.Services
                     Console.WriteLine(path);
                 }
 
-                return myUniqueFileName;
+                return file.FileName;
 
 
             

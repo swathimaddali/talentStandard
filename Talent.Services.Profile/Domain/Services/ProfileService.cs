@@ -146,8 +146,8 @@ namespace Talent.Services.Profile.Domain.Services
                     existingUser.Description = model.Description;                 
                     existingUser.UpdatedBy = updaterId;
                     existingUser.UpdatedOn = DateTime.Now;
-                    existingUser.ProfilePhoto = model.ProfilePhoto;
-                    existingUser.ProfilePhotoUrl = model.ProfilePhotoUrl;
+                   // existingUser.ProfilePhoto = model.ProfilePhoto;
+                   // existingUser.ProfilePhotoUrl = model.ProfilePhotoUrl;
                     existingUser.JobSeekingStatus = model.JobSeekingStatus;
                     existingUser.Summary = model.Summary;
                     existingUser.VisaStatus = model.VisaStatus;

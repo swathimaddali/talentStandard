@@ -68,8 +68,8 @@ export class EmailVerification extends React.Component {
     verifyEmail() {
         this.setState({ isLoading: true });
         $.ajax({
-         //   url: 'http://localhost:60998/authentication/authentication/resendVerificationLink',
-            url: 'https://talentservicesidentity2.azurewebsites.net/authentication/authentication/resendVerificationLink',
+          url: 'http://localhost:60998/authentication/authentication/resendVerificationLink',
+           // url: 'https://talentservicesidentity2.azurewebsites.net/authentication/authentication/resendVerificationLink',
             type: 'POST',
             data: JSON.stringify(this.state.email),
             contentType: 'application/json',

@@ -456,6 +456,7 @@ namespace Talent.Services.Profile.Controllers
 
         }
         */
+
         /***/
         //swati
         /*
@@ -480,7 +481,57 @@ namespace Talent.Services.Profile.Controllers
             
         }
 
+
+            _environment
+
 */
+
+        [HttpGet("getProfileImage")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> getProfileImage(string Id = "")
+        {
+
+
+            String talentId = String.IsNullOrWhiteSpace(Id) ? _userAppContext.CurrentUserId : Id;
+
+            //  var profileUrl = await _documentService.GetFileURL(talentId, FileType.ProfilePhoto);
+            User existingUser = (await _userRepository.GetByIdAsync(talentId));
+            var profileUrl = existingUser.ProfilePhotoUrl;
+            var profilePhoto = existingUser.ProfilePhoto;
+           
+            if (!string.IsNullOrEmpty(profileUrl))
+            {
+                //var path= _environment.ContentRootPath +"\\"+ profilePhoto;
+                // var path= @"C:\Users\phani\source\repos\swathimaddali\talentStandard\Talent.Services.Profile\images\food-unsplash-thumbnail.jpg"; 
+
+              //  var path = @"C:\Users\phani\source\repos\swathimaddali\talentStandard\Talent.Services.Profile\images\demo.jpg";
+               // if (System.IO.File.Exists(path)) {
+                    //return base.File(path, "image/jpeg");
+               // }
+                string srcfil = System.IO.Path.Combine(_environment.ContentRootPath, profilePhoto);
+
+               // if (System.IO.File.Exists(srcfil))
+               // {
+                  //  return base.File(srcfil, "image/jpg");
+               // }
+                string source = @"C:\Users\phani\source\repos\swathimaddali\talentcompetition\Talent.Services.Profile\images\demo.jpg";
+                if (System.IO.File.Exists(source)) {
+                    //this sends as attachment
+                    FileStream stream = new FileStream(source, FileMode.Open);
+                    FileStreamResult result = new FileStreamResult(stream, "image/jpeg");
+                    result.FileDownloadName = profilePhoto;
+                    return result;
+
+                }
+                else
+                    return Json(new { Success = false, message = "Image not available" });
+
+            }
+            else
+                return Json(new { Success = false, message = "profile url empty" });
+        }
+
+        /*
         [HttpGet("getProfileImage")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> getProfileImage(string Id = "")
@@ -494,6 +545,7 @@ namespace Talent.Services.Profile.Controllers
             var profileUrl = existingUser.ProfilePhotoUrl;
             if (!string.IsNullOrEmpty(profileUrl))
             {                 
+
 
                 string source= @"C:\Users\phani\source\repos\swathimaddali\talentcompetition\Talent.Services.Profile\";
                 string dest= @"C:\Users\phani\source\repos\swathimaddali\talentcompetition\App\Talent.App.WebApp\wwwroot\";
@@ -510,7 +562,7 @@ namespace Talent.Services.Profile.Controllers
 
 
         }
-
+        */
 
         /***/
         //swati

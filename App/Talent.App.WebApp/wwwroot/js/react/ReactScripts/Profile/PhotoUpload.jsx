@@ -17,13 +17,40 @@ export default class PhotoUpload extends Component {
 
     constructor(props) {
         super(props);
-        this.loadData = this.loadData.bind(this);
-        const imageId = props.imageId ? props.imageId : ""
-        this.state = { newFile: imageId, show: false }
+        //this.loadData = this.loadData.bind(this);
+        //////const imageId = props.imageId ? props.imageId : ""
+       // console.log("imageId" + imageId); 
+        this.state = {
+            newFile: "",
+            show: false,
+            src:"",
+            imageSrc: [],
+   
+        }
         this.fileChangedHandler = this.fileChangedHandler.bind(this)
         this.fileUpload = this.fileUpload.bind(this)
+       // this.loadData = this.loadData.bind(this)
 
     };
+     
+    componentDidMount() {
+
+        //if any pic exists setstate    else set null
+        const newFile = this.props.imageId ? this.props.imageId : "";
+        this.setState({ newFile: newFile });
+        // this.loadData();       
+
+    };
+
+    static getDerivedStateFromProps(props, state) {
+       // console.log("getDerivedStateFromProps");
+        if (props.imageId !== state.newFile) {
+          //  console.log("getDerivedStateFromProps not same" );
+            return {
+                newFile: props.imageId
+            }
+        }
+    }
     /*
     loadData() {
         console.log("inside load data");
@@ -33,88 +60,78 @@ export default class PhotoUpload extends Component {
             url: link,
             headers: {
                 'Authorization': 'Bearer ' + cookies,
-                'Content-Type': 'application/json'
+                'Content-Type': 'image/jpeg'
             },
             type: "GET",
-            contentType: "application/json",
-            dataType: "json",
-            success: function (res) {
-                if (res.success == true) {
+            contentType: "image/jpeg",
+           // responseType: 'blob',
+            //responseType : "arraybuffer",
+            success: function (res,status,xhr) {
+                if (res) {
                     console.log("res" + res);
+                  // const base64 = btoa(new Uint8Array(res.filename).reduce((data, byte) => data + string.fromCharCode(byte), ''));
+                  //  this.setState({ newFile: "data:;base64," + base64 });
+                    let imageSrcArr = [];
+                    imageSrcArr.push(res);
+                    this.setState({ imageSrc: imageSrcArr })
                     //res.profilePath.split()
                     //const newFile = this.props.imageId ? this.props.imageId : "";
-                    this.setState({ newFile: res.profileUrl });
+                    //  this.setState({ newFile: res });
+                    //var blob = new Blob([res], { type: "image/jpeg" });
+                   // var cd = xhr.getResponseHeader('Content-Disposition'); //if you have the fileName header available
+                    //var cd1 = res.getResponseHeader("Content-Disposition");
+                   // console.log("cd" + cd);
+                  ////  var strt = cd.indexOf("filename=");
+                  //  var end = cd.length - 1;
+                  //  var filenm = cd.substring(strt, end);
+
+                    //var link = document.createElement('a');
+                   // link.href = "/images"+blob;
+                   // link.download = "/images/ii.jpeg";
+                   //  link.click();
+              
+                    
+                    //$("#my").append('<iframe src= "' + res +  '" style="display: none;"></iframe>');
+
+                  //  window.location="download.action?"
+                  
+                  //  var raw = res;
+                 //   var b64res = btoa(raw);
+                 //   var img = document.getElementById("#my");
+                  //  img.src = 'data:image/jpeg;base64,' + b64res;
+             
+                    var arrayBufferView = new Uint8Array(res);
+                    var blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+                    var urlCreator = window.URL || window.webkitURL;
+                    var imageUrl = urlCreator.createObjectURL(blob);
+                    var img = document.querySelector("#my");
+                    img.src = imageUrl;
+                    
+                   // this.setState({ newFile: imageUrl });
+
 
                 }
-            }.bind(this),
+            }.bind(this)
         })
 
     }
+*/
     
-    componentDidMount() {
-
-        //if any pic exists setstate    else set null
-        // const newFile = this.props.imageId ? this.props.imageId : "";
-        this.loadData();
-        // const src = "/images/kelly-sikkema-487603-unsplash.jpg"
-
-    };
-    */
-    /*downloadPhoto() {
-       
-        var cookies = Cookies.get('talentAuthToken');
-        var file = this.state.file;
-        var fileName = file.name
-        var fd = new FormData();
-        fd.append('file', file);
-        $.ajax({
-
-            url:
-            headers: {
-                'Authorization': 'Bearer ' + cookies,
-            },
-
-            processData: false,
-            contentType: false,
-            type: "GET",         
-            success: function (res) {
-                console.log(res)
-                if (res.success == true) {
-                    TalentUtil.notification.show("Profile updated sucessfully", "success", null, null)
-                } else {
-                    TalentUtil.notification.show("Profile did not update successfully", "error", null, null)
-                }
-
-            }.bind(this),
-            error: function (res) {
-                console.log("error", res)
-            }
-        })
-
-    }
-    */
-
-
-
+   
 
     fileUpload() {
-
-
+      
         this.setState({
 
             show: true
         })
-        const file = this.state.newFile;
+        const file = this.state.src;
         if (!file == "") {
-
             console.log("uploaded file is " + file.name)
-
             const form = new FormData();//empty
             form.append('file', file);
-            var url = this.props.savePhotoUrl;
-            for (var key in form) {
-                //console.log("formdetails"+key + form[key])
-            }
+            var url= this.props.savePhotoUrl;
+            
             var cookies = Cookies.get('talentAuthToken');
             console.log("cookies" + JSON.stringify(cookies))
             $.ajax({
@@ -130,7 +147,10 @@ export default class PhotoUpload extends Component {
                 contentType: false,
                 success: function (res) {
                     if (res.success) {
-                        this.loadImages(Id);
+                       // this.loadImages(Id);
+                        console.log("success");
+                        //this.props.updateProfileData(this.state.newFile)
+                        TalentUtil.notification.show(res.message, "success", null, null);
                     } else {
                         TalentUtil.notification.show(res.message, "error", null, null);
                     }
@@ -140,95 +160,29 @@ export default class PhotoUpload extends Component {
                     TalentUtil.notification.show("There is an error when updating Images - " + error, "error", null, null);
                 }
             });
+            
 
         }
 
     }
-
-
-    /* uploadPhoto() {
-         console.log(this.state.file)
-         var cookies = Cookies.get('talentAuthToken');
-         var file = this.state.file;
-         var fileName = file.name
-         var fd = new FormData();
-         fd.append('file', file);
-         $.ajax({
- 
-             url: this.props.savePhotoUrl,
-             headers: {
-                 'Authorization': 'Bearer ' + cookies,
-             },
- 
-             processData: false,
-             contentType: false,
-             type: "POST",
-             data: fd,
-             success: function (res) {
-                 console.log(res)
-                 if (res.success == true) {
-                     TalentUtil.notification.show("Profile updated sucessfully", "success", null, null)
-                 } else {
-                     TalentUtil.notification.show("Profile did not update successfully", "error", null, null)
-                 }
- 
-             }.bind(this),
-             error: function (res) {
-                 console.log("error", res)
-             }
-         })
- 
-     }
- 
- 
- 
-         fileSelectedChange() {
- 
-             let acceptedExt = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
- 
-             let selectedFile = event.target.files[0];
-             console.log(event.target.files[0]);
-             if (this.state.newFile) {
-                 URL.revokeObjectURL(newFile);
-             }
-             if (acceptedExt.includes(selectedFile.type)) {
-                 this.setState({
-                     uploadButton: "",
-                     newFileUrl: URL.createObjectURL(event.target.files[0]),
-                     newFile: event.target.files[0]
-                 })
-             }
-     }
-     */
-
+    
+         
 
 
     fileChangedHandler(event) {
 
-
-
         let acceptedExt = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
-
-        const selectedFile = event.target.files[0];
- 
-        //remove old file
-        // if (this.state.newFile) {
-        //   URL.revokeObjectURL(this.state.newFile);
-        //}
+        let selectedFile = event.target.files[0]; 
+     
         if (acceptedExt.includes(selectedFile.type)) {
-            this.setState({
-                // uploadButton: "",
-
-                newFile: selectedFile,
-                //src: URL.createObjectURL(event.target.files[0]),
-                show: true
+            this.setState({               
+                newFile: selectedFile.name,
+                src: selectedFile,
+                show: true,            
 
             })
         }
-        console.log("inside file change" + this.state.newFile.name);
-        console.log("the selected file is" + (event.target.files[0]).name + "type is" + (event.target.files[0]).type);
-        //  console.log("URL.createObjectURL(event.target.files[0])" + URL.createObjectURL(event.target.files[0]))
-
+        
     }
 
     selectFileToUpload() {
@@ -239,28 +193,26 @@ export default class PhotoUpload extends Component {
 
 
     render() {
-        console.log("this.state.newFile" + this.state.newFile); 
+      
         let upload = ""
+        let file = this.state.newFile ? this.state.newFile :""
+        const show = this.state.show       
+        let src = "/images/" + file
        
-        const show = this.state.show
-        
         if (show)
             upload = <div> <Button color="black" onClick={this.fileUpload}>Upload <Icon name='upload' /></Button></div>
         let showProfileImg = [];
-        if (this.state.newFile == "") {
+       // if (this.props.imageId == "")
+        if (file == "")
+        {
             showProfileImg.push(<span><i className="huge circular camera retro icon" style={{ alignContent: 'right', verticalAlign: 'top' }} onClick={this.selectFileToUpload}></i></span>);
-
         }
         else
-            showProfileImg.push(<span><img style={{ height: 112, width: 112, borderRadius: 55 }} className="ui medium" src={this.state.newFile} alt="Image Not Found"  onClick={this.selectFileToUpload} /></span>);
+            showProfileImg.push(<span><img style={{ height: 112, width: 112, borderRadius: 55 }} className="ui small" src={src} alt="Image Not Found" onClick={this.selectFileToUpload} /></span>)
         return (
-
-
             <div className="row">
                 <div className="four wide column">
                     <h4>Profile Photo</h4>
-
-
                     <div className="tooltip">Upload profile image here</div>
                 </div>
                 <div className="twelve wide column" >
@@ -269,8 +221,8 @@ export default class PhotoUpload extends Component {
                             <label htmlFor="work_sample_uploader" className="profile-photo">
                                 {showProfileImg}
                             </label>
-                            <input id="selectFile" type="file" style={{ display: 'none' }} onChange={this.fileChangedHandler} accept="image/*" multiple />
-
+                            <input id="selectFile" type="file" style={{ display: 'none' }} onChange={this.fileChangedHandler} accept="image/*" multiple />                           
+                                                        
                         </div>
                         {upload}
                     </section>
