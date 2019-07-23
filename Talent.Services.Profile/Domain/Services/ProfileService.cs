@@ -15,6 +15,7 @@ using Talent.Common.Security;
 
 namespace Talent.Services.Profile.Domain.Services
 {
+    [MongoDB.Bson.Serialization.Attributes.BsonIgnoreExtraElements]
     public class ProfileService : IProfileService
     {
         private readonly IUserAppContext _userAppContext;
@@ -336,6 +337,7 @@ namespace Talent.Services.Profile.Domain.Services
                             foreach (var item in employer.Skills)
                             {
                                 var skill = existingRecruiter.Skills.SingleOrDefault(x => x.Id == item.Id);
+                            
                                 if (skill == null)
                                 {
                                     skill = new UserSkill
@@ -437,11 +439,143 @@ namespace Talent.Services.Profile.Domain.Services
             throw new NotImplementedException();
         }
 
+
+
+
+        protected TalentSnapshotViewModel getTalentSnapshot(User user)
+        {
+
+
+            String name = String.Format("{0} {1}", user.FirstName, user.LastName);
+            List<string> skills = user.Skills.Select(x => x.Skill).ToList();
+           /// string photo = await _documentService.GetFileURL(user.ProfilePhoto, FileType.ProfilePhoto);
+
+            UserExperience latest = user.Experience.OrderByDescending(x => x.End).FirstOrDefault();
+            String level, employment;
+            if (latest != null)
+            {
+                level = latest.Position;
+                employment = latest.Company;
+            }
+            else
+            {
+                level = "Unknown";
+                employment = "Unknown";
+            }
+
+            var result = new TalentSnapshotViewModel
+            {
+                CurrentEmployment = employment,
+                Id = user.Id,
+                Level = level,
+                Name = name,
+                PhotoId = user.ProfilePhotoUrl,
+                Skills = skills,
+                Summary = user.Summary,
+                Visa = user.VisaStatus
+            };
+
+            return result;
+        }
+
+
+
+        //start
+     
         public async Task<IEnumerable<TalentSnapshotViewModel>> GetTalentSnapshotList(string employerOrJobId, bool forJob, int position, int increment)
         {
-            //Your code here;
-            throw new NotImplementedException();
+            //IEnumerable<Employer>   existingEmployer = (await _employerRepository.Get(x => !x.IsDeleted));
+           // var users = (await _userRepository.Get(x => true)).Skip(position).Take(increment);
+            IEnumerable<User> users1 = (await _userRepository.Get(x => !x.IsDeleted)).Skip(position).Take(increment);
+
+            List<TalentSnapshotViewModel> result = new List<TalentSnapshotViewModel>();
+
+            foreach (var user in users1)
+            {
+                result.Add(getTalentSnapshot(user));
+            }
+            return result;
         }
+
+
+        /*
+         * 
+         *  try { 
+                var profile = await _employerRepository.GetByIdAsync(employerOrJobId);
+                var talentList = _userRepository.Collection.Skip(position).Take(increment).AsEnumerable();
+                if (profile != null)
+                {
+                    var result = new List<TalentSnapshotViewModel>();                      
+                    
+          //line 527          foreach (var item in talenList)
+                    {
+                        var newItem = new TalentSnapshotViewModel();
+                        newItem.Id = item.Id;
+                        // more lines assigning data
+                        result.Add(newItem);
+                    }
+                    return result;
+                }
+         * */
+
+
+        //end
+        /*
+        public async Task<IEnumerable<TalentSnapshotViewModel>> GetTalentSnapshotList(string employerOrJobId, bool forJob, int position, int increment)
+        {
+
+            //get users from position and increment into array
+            //from that retrieve only selected info and plae into TalentSnapshotViewModel
+
+        
+
+            List<User> userList = users.GetRange(position, increment);
+            List<TalentSnapshotViewModel> result = null;
+            if (userList.Count > 0)
+            {
+                foreach (var item in userList)
+                {
+                    var talent = new TalentSnapshotViewModel
+                    {
+
+                        Name = item.LastName,
+                        PhotoId = item.ProfilePhoto,
+                        VideoUrl = item.VideoName,
+                        CVUrl = item.CvName,
+                        Summary = item.Summary,
+                        Visa = item.VisaStatus,
+                        CurrentEmployment = "",
+                        Level = "",
+                        Skills = null
+
+
+                    };
+                    result.Add(talent);
+                }
+            }
+            else {
+
+                result.Add(
+                    new Models.TalentSnapshotViewModel
+                    {
+                        CurrentEmployment = "Software Developer at XYZ",
+                        Level = "Junior",
+                        Name = "Dummy User...",
+                        PhotoId = "",
+                        Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                        Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                        Visa = "Citizen"
+                    }
+                );
+
+
+
+            }
+
+            return result;
+
+        }
+        */
 
         public async Task<IEnumerable<TalentSnapshotViewModel>> GetTalentSnapshotList(IEnumerable<string> ids)
         {

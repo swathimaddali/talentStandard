@@ -1,5 +1,12 @@
 ﻿import React from "react";
 class Video extends React.Component {
+
+    constructor(props) {
+        super(props);
+       
+       
+
+    };
     componentDidMount()  {
         this.playVideo();
     };
@@ -19,24 +26,22 @@ class Video extends React.Component {
         this.refs.vidRef.pause();
     };
 
-    render()  {
+    render() {
+
+        
+        const vid = this.props.videoUrl ? this.props.videoUrl : "https://assets.polestar.com/video/test/polestar-1_09.mp4"
         return (
             <div>
                 <video
                     ref="vidRef"
-                    src="https://assets.polestar.com/video/test/polestar-1_09.mp4"
-                    type="video/mp4"
-                />
+                    width="400" 
+                    height="300" controls
+                    src={vid}
+                    type="video/mp4"/>
 
-                <div>
-                    <button onClick={this.playVideo}>
-                        Play!
-              </button>
-                    <button onClick={this.pauseVideo}>
-                        Pause!
-              </button>
+               
                 </div>
-            </div>
+            
         );
     };
 }

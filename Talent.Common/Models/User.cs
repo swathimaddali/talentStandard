@@ -18,6 +18,15 @@ namespace Talent.Common.Models
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }
+        //swa
+        public string UserType { get; set; }
+        public string Talent { get; set; }
+        public string PrimaryCV { get; set; }
+        public List<TalentCV> TalentCVs { get; set; }
+        
+
+
+
 
         public string Email { get; set; }
         public string Phone { get; set; }
@@ -107,4 +116,19 @@ namespace Talent.Common.Models
             AvailableDate = null;
         }
     }
+
+    public class TalentCV
+    {
+        public string Status { get; set; }
+        public DateTime? AvailableDate { get; set; }
+
+        public TalentCV()
+        {
+            Status = "";
+            AvailableDate = null;
+        }
+    }
+
+
+
 }

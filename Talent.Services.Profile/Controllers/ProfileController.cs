@@ -102,10 +102,10 @@ namespace Talent.Services.Profile.Controllers
         [HttpGet("test")]
         public IActionResult GetTest()
         {
-           // var userId = _userAppContext.CurrentUserId;
+            // var userId = _userAppContext.CurrentUserId;
             //var user = await _userRepository.GetByIdAsync(userId);
-          
-            return Content("test");
+            var path= _environment.WebRootPath ;
+            return Content("path is "+path);
         }
 
         [HttpGet("getProfileById")]
@@ -485,30 +485,62 @@ namespace Talent.Services.Profile.Controllers
             _environment
 
 */
+        protected static string GetBase64StringForImage(string imgPath)
+        {
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imgPath);
+            string base64String = Convert.ToBase64String(imageBytes);
+            return base64String;
+        }
+
+        
+       
+
+
+
+
+
 
         [HttpGet("getProfileImage")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> getProfileImage(string Id = "")
         {
 
-
             String talentId = String.IsNullOrWhiteSpace(Id) ? _userAppContext.CurrentUserId : Id;
 
-            //  var profileUrl = await _documentService.GetFileURL(talentId, FileType.ProfilePhoto);
+            //  var profileUrl = await _documentService.GetFileURL(talentId, FileType.ProfilePhoto);            
             User existingUser = (await _userRepository.GetByIdAsync(talentId));
-            var profileUrl = existingUser.ProfilePhotoUrl;
+            
+            var profileUrl = _profileImageFolder+existingUser.ProfilePhotoUrl;
             var profilePhoto = existingUser.ProfilePhoto;
-           
+            string imgBase64String = "";
             if (!string.IsNullOrEmpty(profileUrl))
             {
-                //var path= _environment.ContentRootPath +"\\"+ profilePhoto;
-                // var path= @"C:\Users\phani\source\repos\swathimaddali\talentStandard\Talent.Services.Profile\images\food-unsplash-thumbnail.jpg"; 
+                //  string srcpth = System.IO.Path.Combine(_environment.WebRootPath, profilePhoto);
+                string srcpth = System.IO.Path.Combine(_environment.ContentRootPath, profileUrl);
+                //string srcpth = "@\\" + profileUrl;               
+                string extension = Path.GetExtension(srcpth);
+                string type = extension.Substring(1, extension.Length - 1);
+                imgBase64String = GetBase64StringForImage(srcpth);
+                string base64string = "data:image/" + type + ";base64," + imgBase64String;
+                return Json(new { Success = true, src = base64string });
+            }
+            else
+            {
+                return Json(new { Success = false, message = "profile url empty" });
+            }
 
-              //  var path = @"C:\Users\phani\source\repos\swathimaddali\talentStandard\Talent.Services.Profile\images\demo.jpg";
-               // if (System.IO.File.Exists(path)) {
-                    //return base.File(path, "image/jpeg");
-               // }
-                string srcfil = System.IO.Path.Combine(_environment.ContentRootPath, profilePhoto);
+
+        }
+
+        /*
+            //var path= _environment.ContentRootPath +"\\"+ profilePhoto;
+            // var path= @"C:\Users\phani\source\repos\swathimaddali\talentStandard\Talent.Services.Profile\images\food-unsplash-thumbnail.jpg"; 
+
+            //  var path = @"C:\Users\phani\source\repos\swathimaddali\talentStandard\Talent.Services.Profile\images\demo.jpg";
+            // if (System.IO.File.Exists(path)) {
+            //return base.File(path, "image/jpeg");
+            // }
+            string srcfil = System.IO.Path.Combine(_environment.ContentRootPath, profilePhoto);
 
                // if (System.IO.File.Exists(srcfil))
                // {
@@ -530,7 +562,7 @@ namespace Talent.Services.Profile.Controllers
             else
                 return Json(new { Success = false, message = "profile url empty" });
         }
-
+        */
         /*
         [HttpGet("getProfileImage")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -797,19 +829,133 @@ namespace Talent.Services.Profile.Controllers
                 // Dummy talent to fill out the list once we run out of data
                 //if (result.Count == 0)
                 //{
-                //    result.Add(
-                //            new Models.TalentSnapshotViewModel
-                //            {
-                //                CurrentEmployment = "Software Developer at XYZ",
-                //                Level = "Junior",
-                //                Name = "Dummy User...",
-                //                PhotoId = "",
-                //                Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
-                //                Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
-                //                Visa = "Citizen"
-                //            }
-                //        );
-                //}
+              /*  var result = new List<TalentSnapshotViewModel>();
+                   result.Add(
+                           new Models.TalentSnapshotViewModel
+                            {
+                                CurrentEmployment = "Software Developer at XYZ",
+                                Level = "Junior",
+                                Name = "User1",
+                                PhotoId = "",
+                                Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                                Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                                Visa = "Citizen"
+                            }
+                        );
+                result.Add(
+                         new Models.TalentSnapshotViewModel
+                         {
+                             CurrentEmployment = "Software Developer at XYZ",
+                             Level = "Junior",
+                             Name = "User2",
+                             PhotoId = "",
+                             Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                             Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                             Visa = "Citizen"
+                         }
+                      ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User3",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User4",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "ds",
+                              Name = "User5",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User6",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User7",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User8",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User9",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       ); result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User10",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       );
+                        result.Add(
+                          new Models.TalentSnapshotViewModel
+                          {
+                              CurrentEmployment = "Software Developer at XYZ",
+                              Level = "Junior",
+                              Name = "User11",
+                              PhotoId = "",
+                              Skills = new List<string> { "C#", ".Net Core", "Javascript", "ReactJS", "PreactJS" },
+                              Summary = "Veronika Ossi is a set designer living in New York who enjoys kittens, music, and partying.",
+                              Visa = "Citizen"
+                          }
+                       );
+                       */
+
                 return Json(new { Success = true, Data = result });
             }
             catch (Exception e)
@@ -817,6 +963,7 @@ namespace Talent.Services.Profile.Controllers
                 return Json(new { Success = false, e.Message });
             }
         }
+        
         #endregion
 
         #region TalentMatching
